@@ -11,12 +11,15 @@ class NetworkAppGUI(ctk.CTk):
         self.stop_callback = stop_callback
 
         self.title('NCL - Network Command Logger')
-        self.geometry('850x520')
-        self.resizable(False, False)
+        self.geometry('870x680')
+        self.resizable(True, True)
 
         # main grid: 2 columns
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
+
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=1)
 
         self.setup_ui()
 
@@ -25,7 +28,7 @@ class NetworkAppGUI(ctk.CTk):
         # LEFT SIDE: connection parameters
         # =========================================
         left_frame = ctk.CTkFrame(self, fg_color='transparent')
-        left_frame.grid(row=0, column=0, padx=30, py=20, sticky='nsew')
+        left_frame.grid(row=0, column=0, padx=30, pady=20, sticky='nsew')
 
         ctk.CTkLabel(left_frame, text='Connection parameters', font=ctk.CTkFont(size=16, weight='bold')).pack(anchor='w', pady=(0, 15))
 
@@ -47,10 +50,10 @@ class NetworkAppGUI(ctk.CTk):
         ctk.CTkLabel(ip_sub, text='IP-address:').pack(anchor='w')
         self.host_entry = ctk.CTkEntry(ip_sub, placeholder_text='192.168.1.1')
         self.host_entry.insert(0, '192.168.1.1')
-        self.host_entry.pack(anchor='w', fill='x', pright=10)
+        self.host_entry.pack(anchor='w', fill='x', padx=(0, 10))
 
         port_sub = ctk.CTkFrame(ip_port_frame, fg_color='transparent')
-        port_sub.pack(side='right', width=80)
+        port_sub.pack(side='right')
         ctk.CTkLabel(port_sub, text='Port:').pack(anchor='w')
         self.port_entry = ctk.CTkEntry(port_sub, placeholder_text='22')
         self.port_entry.insert(0, '22')
@@ -80,7 +83,7 @@ class NetworkAppGUI(ctk.CTk):
         # RIGHT SIDE: Time settings (interval/duration)
         # =========================================
         right_frame = ctk.CTkFrame(self, fg_color='transparent')
-        right_frame.grid(row=0, column=1, padx=30, py=20, sticky='nsew')
+        right_frame.grid(row=0, column=1, padx=30, pady=20, sticky='nsew')
 
         ctk.CTkLabel(right_frame, text='Time settings', font=ctk.CTkFont(size=16, weight='bold')).pack(anchor='w', pady=(0, 15))
 
@@ -93,12 +96,12 @@ class NetworkAppGUI(ctk.CTk):
         self.interval_cb.pack(anchor='w', pady=(0, 10))
 
         # gray container
-        self.time_box = ctk.CTkFont(right_frame, border_width=1, border_color='gray40')
+        self.time_box = ctk.CTkFrame(right_frame, border_width=1, border_color='gray40')
         self.time_box.pack(fill='x', ipady=10, ipadx=10, pady=(0, 20))
 
         self.lbl_int = ctk.CTkLabel(self.time_box, text='Polling interval (sec):')
         self.lbl_int.pack(anchor='w', padx=10, pady=(5, 0))
-        self.interval_entry = ctk.CTkEntry(self,self.time_box, width=120)
+        self.interval_entry = ctk.CTkEntry(self.time_box, width=120)
         self.interval_entry.insert(0, '60')
         self.interval_entry.pack(anchor='w', padx=10, pady=(0, 10))
 
@@ -120,7 +123,7 @@ class NetworkAppGUI(ctk.CTk):
         # BOTTOM SIDE: file, buttons, status
         # =========================================
         bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
-        bottom_frame.grid(row=1, column=0, columnspan=2, padx=30, py=(0, 20), sticky='ew')
+        bottom_frame.grid(row=1, column=0, columnspan=2, padx=30, pady=(0, 35), sticky='nsew')
 
         # selecting the log file
         ctk.CTkLabel(bottom_frame, text='Path to the file log:').pack(anchor='w')
@@ -129,7 +132,7 @@ class NetworkAppGUI(ctk.CTk):
 
         self.file_entry = ctk.CTkEntry(file_frame, placeholder_text='Choose a path...')
         self.file_entry.insert(0, os.path.abspath('network_log.txt'))
-        self.file_entry.pack(side='left', fill='x', expand=True, pright=10)
+        self.file_entry.pack(side='left', fill='x', expand=True, padx=(0, 10))
 
         self.browse_btn = ctk.CTkButton(file_frame, text='Browse...', width=90, command=self.choose_file)
         self.browse_btn.pack(side='right')
@@ -143,14 +146,14 @@ class NetworkAppGUI(ctk.CTk):
         buttons_frame.pack(fill='x')
 
         self.start_button = ctk.CTkButton(buttons_frame, text='Start', fg_color='green', hover_color='darkgreen', command=self.start_callback)
-        self.start_button.pack(side='left', fill='x', expand=True, pright=10)
+        self.start_button.pack(side='left', fill='x', expand=True, padx=(0, 10))
 
         self.stop_button = ctk.CTkButton(buttons_frame, text='Stop', fg_color='red', hover_color='darkred', state='disabled', command=self.stop_callback)
         self.stop_button.pack(side='right', fill='x', expand=True)
 
         # status
         self.status_label = ctk.CTkLabel(bottom_frame, text='Status: Waiting for the start', font=ctk.CTkFont(size=12, slant='italic'))
-        self.status_label.pack(pady=(15, 0))
+        self.status_label.pack(pady=(15, 0), fill='x', expand=True)
 
         # swutching the availability of fields for the current checkboxes
         self.toggle_time_widgets()
